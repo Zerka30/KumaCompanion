@@ -130,23 +130,16 @@ def add_monitor(args):
         print("Error creating monitor:", str(e))
 
 
-def add_status_page(args):
-    # Logique pour créer une page de status
-    print("Status page added")
-
-
-def add_maintenance(args):
-    # Logique pour créer une maintenance
-    print("Maintenance added")
-
-
 def normalize_type(value):
     return value.lower()
 
 
-def monitor_parser(add_subparsers):
-    # Add monitoring
-    monitor_parser = add_subparsers.add_parser("monitor", help="Add a monitoring")
+def monitor_parser(subparsers):
+    monitor_parser = subparsers.add_parser(
+        "add",
+        aliases=["create"],
+        help="Add a new monitor",
+    )
 
     # Specify options for the monitoring
     monitor_parser.add_argument(
@@ -347,27 +340,6 @@ def monitor_parser(add_subparsers):
 
     # Add validation function for monitor command
     monitor_parser.set_defaults(validate=validate_monitor_args, func=add_monitor)
-
-
-def add_subparser(subparsers):
-    add_parser = subparsers.add_parser(
-        "add",
-        aliases=["create"],
-        help="Add a new object",
-    )
-    add_subparsers = add_parser.add_subparsers(title="Options", dest="add_command")
-
-    monitor_parser(add_subparsers)
-
-    # Add status page
-    status_parser = add_subparsers.add_parser("status", help="Add a status page")
-    status_parser.set_defaults(func=add_status_page)
-
-    # Add maintenance
-    maintenance_parser = add_subparsers.add_parser(
-        "maintenance", help="Add a maintenance"
-    )
-    maintenance_parser.set_defaults(func=add_maintenance)
 
 
 def validate_monitor_args(args):
