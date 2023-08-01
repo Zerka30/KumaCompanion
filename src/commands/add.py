@@ -343,6 +343,7 @@ def monitor_parser(add_subparsers):
 
     # Gamedig options
     gamedig_group = monitor_parser.add_argument_group(title="Gamedig Options")
+    gamedig_group.add_argument("--game", help="Define game")
 
     # Add validation function for monitor command
     monitor_parser.set_defaults(validate=validate_monitor_args, func=add_monitor)
