@@ -355,7 +355,7 @@ def add_subparser(subparsers):
         aliases=["create"],
         help="Add a new object",
     )
-    add_subparsers = add_parser.add_subparsers(title="Options", dest="addmmand")
+    add_subparsers = add_parser.add_subparsers(title="Options", dest="add_command")
 
     monitor_parser(add_subparsers)
 
