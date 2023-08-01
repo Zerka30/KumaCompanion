@@ -122,8 +122,8 @@ def add_monitor(args):
 
     # Appeler la méthode add_monitor pour créer le monitoring
     try:
-        api.add_monitor(**monitor_data)
-        print("Monitor added successfully!")
+        response = api.add_monitor(**monitor_data)
+        print(response["msg"])
         api.disconnect()
     except Exception as e:
         api.disconnect()
