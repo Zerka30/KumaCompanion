@@ -1,23 +1,9 @@
 import argparse
-import sys
 import config
 from uptime_kuma_api import UptimeKumaApi, MonitorType
 
-def create_monitor(args):
-    # Logique pour créer un monitoring en utilisant les options spécifiées
-    print("Creating a monitoring with the following options:")
-    print("Type:", args.type)
-    print("Name:", args.name)
-    print("Parent:", args.parent)
-    print("Description:", args.description)
-    print("Interval:", args.interval)
-    print("Retry:", args.retry)
-    print("Resend:", args.resend)
-    print("Max Retries:", args.maxretries)
-    print("Port:", args.port)
-    print("URL:", args.url)
-    print("Hostname:", args.hostname)
 
+def create_monitor(args):
     monitorType = {
         "HTTP": MonitorType.HTTP,
         "PORT": MonitorType.PORT,
@@ -50,78 +36,81 @@ def create_monitor(args):
         "maxretries": args.maxretries,
         "port": args.port,
         "url": args.url,
-        "hostname": args.hostname
+        "hostname": args.hostname,
     }
-    
-    if args.type == "HTTP":
-        monitor_data["url"] = args.url
-        monitor_data["expiryNotification"] = args.expirynotification
-        monitor_data["ignoreTls"] = args.ignoretls
-        monitor_data["accepted_statuscodes"] = args.statuscodes
-        monitor_data["proxyId"] = args.proxy
-        monitor_data["method"] = args.method
-        monitor_data["httpBodyEncoding"] = args.bodyencoding
-        monitor_data["body"] = args.body
-        monitor_data["headers"] = args.headers
-        monitor_data["authMethod"] = args.authmethod
+    match args.type:
+        case "HTTP":
+            monitor_data["url"] = args.url
+            monitor_data["expiryNotification"] = args.expirynotification
+            monitor_data["ignoreTls"] = args.ignoretls
+            monitor_data["accepted_statuscodes"] = args.statuscodes
+            monitor_data["proxyId"] = args.proxy
+            monitor_data["method"] = args.method
+            monitor_data["httpBodyEncoding"] = args.bodyencoding
+            monitor_data["body"] = args.body
+            monitor_data["headers"] = args.headers
+            monitor_data["authMethod"] = args.authmethod
 
-        if args.authmethod == "HTTP_BASIC":
-            monitor_data["basic_auth_user"] = args.http_username
-            monitor_data["basic_auth_pass"] = args.http_password
-        elif args.authmethod == "NTLM":
-            monitor_data["basic_auth_user"] = args.http_username
-            monitor_data["basic_auth_pass"] = args.http_password
-            monitor_data["authDomain"] = args.domain
-            monitor_data["authWorkstation"] = args.workstation
-        elif args.authmethod == "MTLS":
-            monitor_data["tlsCert"] = args.cert
-            monitor_data["tlsKey"] = args.key
-            monitor_data["tlsCa"] = args.ca
+            match args.authmethod:
+                case "HTTP_BASIC":
+                    monitor_data["basic_auth_user"] = args.http_username
+                    monitor_data["basic_auth_pass"] = args.http_password
 
-    elif args.type == "Ping":
-        monitor_data["hostname"] = args.hostname
+                case "NTLM":
+                    monitor_data["basic_auth_user"] = args.http_username
+                    monitor_data["basic_auth_pass"] = args.http_password
+                    monitor_data["authDomain"] = args.domain
+                    monitor_data["authWorkstation"] = args.workstation
 
-    elif args.type == "Keyword" or args.type == "GRPC_KEYWORD":
-        monitor_data["url"] = args.url
-        monitor_data["keyword"] = args.keyword
+                case "MTLS":
+                    monitor_data["tlsCert"] = args.cert
+                    monitor_data["tlsKey"] = args.key
+                    monitor_data["tlsCa"] = args.ca
 
-    elif args.type == "DNS":
-        monitor_data["hostname"] = args.hostname
-        monitor_data["dns_resolve_server"] = args.resolver
-        monitor_data["dns_resolve_type"] = args.record
+        case "Ping":
+            monitor_data["hostname"] = args.hostname
 
-    elif args.type == "Docker":
-        monitor_data["docker_container"] = args.container
-        monitor_data["docker_host"] = args.dhost
+        case "Keyword" | "GRPC_KEYWORD":
+            monitor_data["url"] = args.url
+            monitor_data["keyword"] = args.keyword
 
-    elif args.type == "GameDig":
-        monitor_data["hostname"] = args.hostname
-        monitor_data["port"] = args.port
-        monitor_data["game"] = args.game
+        case "DNS":
+            monitor_data["hostname"] = args.hostname
+            monitor_data["dns_resolve_server"] = args.resolver
+            monitor_data["dns_resolve_type"] = args.record
 
-    elif args.type == "MQTT":
-        monitor_data["hostname"] = args.hostname
-        monitor_data["port"] = args.port
-        monitor_data["mqttTopic"] = args.topic
-        monitor_data["mqttUsername"] = args.mqtt_username
-        monitor_data["mqttPassword"] = args.mqtt_password
-        monitor_data["mqttSuccessMessage"] = args.mqtt_success
+        case "Docker":
+            monitor_data["docker_container"] = args.container
+            monitor_data["docker_host"] = args.dhost
 
-    elif args.type in ["SQLServer", "Postgres", "MySQL", "MongoDB"]:
-        monitor_data["databaseConnectionString"] = args.dbcon
-        monitor_data["databaseQuery"] = args.query
+        case "GameDig":
+            monitor_data["hostname"] = args.hostname
+            monitor_data["port"] = args.port
+            monitor_data["game"] = args.game
 
-    elif args.type == "Radius":
-        monitor_data["hostname"] = args.hostname
-        monitor_data["port"] = args.port
-        monitor_data["radiusSecret"] = args.radius_secret
-        monitor_data["radiusUsername"] = args.radius_username
-        monitor_data["radiusPassword"] = args.radius_password
-        monitor_data["radiusCalledStationId"] = args.radius_called
-        monitor_data["radiusCallingStationId"] = args.radius_calling
+        case "MQTT":
+            monitor_data["hostname"] = args.hostname
+            monitor_data["port"] = args.port
+            monitor_data["mqttTopic"] = args.topic
+            monitor_data["mqttUsername"] = args.mqtt_username
+            monitor_data["mqttPassword"] = args.mqtt_password
+            monitor_data["mqttSuccessMessage"] = args.mqtt_success
 
-    elif args.type == "Redis":
-        monitor_data["dbcon"] = args.dbcon
+        case "SQLServer" | "Postgres" | "MySQL" | "MongoDB":
+            monitor_data["databaseConnectionString"] = args.dbcon
+            monitor_data["databaseQuery"] = args.query
+
+        case "Radius":
+            monitor_data["hostname"] = args.hostname
+            monitor_data["port"] = args.port
+            monitor_data["radiusSecret"] = args.radius_secret
+            monitor_data["radiusUsername"] = args.radius_username
+            monitor_data["radiusPassword"] = args.radius_password
+            monitor_data["radiusCalledStationId"] = args.radius_called
+            monitor_data["radiusCallingStationId"] = args.radius_calling
+
+        case "Redis":
+            monitor_data["dbcon"] = args.dbcon
 
     # Connexion a notre instance uptime kuma
     api = UptimeKumaApi(config.UPTIME_KUMA_URL)
@@ -150,75 +139,185 @@ def create_maintenance(args):
     # Logique pour créer une maintenance
     print("Maintenance created")
 
+
 def normalize_type(value):
     return value.lower()
+
 
 def monitor_parser(create_subparsers):
     # Create monitoring
     monitor_parser = create_subparsers.add_parser("monitor", help="Create a monitoring")
 
     # Specify options for the monitoring
-    monitor_parser.add_argument("--type", required=True, choices=["dns", "http", "docker", "port", "ping", "mongodb", "gamedig", "group", "grpc_keyword", "keyword", "mysql", "mqtt"], help="Define monitor type (HTTP, Ping, Docker...)", type=normalize_type)
-    monitor_parser.add_argument("-n", "--name", required=True, help="Define name of the monitoring")
-    monitor_parser.add_argument("-d", "--description", help="Define a human-readable description for the monitoring")
-    monitor_parser.add_argument("--parent", help="Define the ID of the parent monitor group")
-    monitor_parser.add_argument("-i", "--interval", type=int, help="Define the interval between each ping in seconds")
-    monitor_parser.add_argument("-r", "--retry", type=int, help="Define the number of retries before considering the service as down")
-    monitor_parser.add_argument("--resend", type=int, help="Define the number of times to resend requests before considering the service as down")
-    monitor_parser.add_argument("-m", "--maxretries", type=int, help="Define the maximum number of retries before the service is marked as down and a notification is sent")
-    monitor_parser.add_argument("--url", help="Define the URL to ping for the monitoring")
-    monitor_parser.add_argument("--hostname", help="Define the hostname for the monitoring")
-    monitor_parser.add_argument("-p", "--port", type=int, help="Define the port to ping for the monitoring")
+    monitor_parser.add_argument(
+        "--type",
+        required=True,
+        choices=[
+            "dns",
+            "http",
+            "docker",
+            "port",
+            "ping",
+            "mongodb",
+            "gamedig",
+            "group",
+            "grpc_keyword",
+            "keyword",
+            "mysql",
+            "mqtt",
+        ],
+        help="Define monitor type (HTTP, Ping, Docker...)",
+        type=normalize_type,
+    )
+    monitor_parser.add_argument(
+        "-n", "--name", required=True, help="Define name of the monitoring"
+    )
+    monitor_parser.add_argument(
+        "-d",
+        "--description",
+        help="Define a human-readable description for the monitoring",
+    )
+    monitor_parser.add_argument(
+        "--parent", help="Define the ID of the parent monitor group"
+    )
+    monitor_parser.add_argument(
+        "-i",
+        "--interval",
+        type=int,
+        help="Define the interval between each ping in seconds",
+    )
+    monitor_parser.add_argument(
+        "-r",
+        "--retry",
+        type=int,
+        help="Define the number of retries before considering the service as down",
+    )
+    monitor_parser.add_argument(
+        "--resend",
+        type=int,
+        help="Define the number of times to resend requests before considering the service as down",
+    )
+    monitor_parser.add_argument(
+        "-m",
+        "--maxretries",
+        type=int,
+        help="Define the maximum number of retries before the service is marked as down and a notification is sent",
+    )
+    monitor_parser.add_argument(
+        "--url", help="Define the URL to ping for the monitoring"
+    )
+    monitor_parser.add_argument(
+        "--hostname", help="Define the hostname for the monitoring"
+    )
+    monitor_parser.add_argument(
+        "-p", "--port", type=int, help="Define the port to ping for the monitoring"
+    )
     monitor_parser.add_argument("--packetsize", type=int, help="Define the packetsize")
-    
+
     # Add options for each type
     # HTTP options
     http_group = monitor_parser.add_argument_group(title="HTTP Options")
-    http_group.add_argument("--expirynotification", action="store_true", help="Enable certificate expiry notification")
-    http_group.add_argument("--ignoretls", action="store_true", help="Ignore TLS/SSL errors for HTTPS websites")
-    http_group.add_argument("--statuscodes", nargs="+", type=int, help="Select status codes considered as a successful response")
+    http_group.add_argument(
+        "--expirynotification",
+        action="store_true",
+        help="Enable certificate expiry notification",
+    )
+    http_group.add_argument(
+        "--ignoretls",
+        action="store_true",
+        help="Ignore TLS/SSL errors for HTTPS websites",
+    )
+    http_group.add_argument(
+        "--statuscodes",
+        nargs="+",
+        type=int,
+        help="Select status codes considered as a successful response",
+    )
     http_group.add_argument("--proxy", help="Define the proxy for the monitoring")
-    http_group.add_argument("--method", choices=["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"], default="GET", help="Define the method for the monitoring")
-    http_group.add_argument("--bodyencoding", choices=["json", "xml"], default="json", help="Define the body encoding for the monitoring")
+    http_group.add_argument(
+        "--method",
+        choices=["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+        default="GET",
+        help="Define the method for the monitoring",
+    )
+    http_group.add_argument(
+        "--bodyencoding",
+        choices=["json", "xml"],
+        default="json",
+        help="Define the body encoding for the monitoring",
+    )
     http_group.add_argument("--body", help="Define the body for the monitoring")
     http_group.add_argument("--headers", help="Define the headers for the monitoring")
-    http_group.add_argument("--authmethod", choices=["NONE", "HTTP_BASIC", "NTLM", "MTLS"], default="NONE", help="Define the authentication method for the monitoring")
+    http_group.add_argument(
+        "--authmethod",
+        choices=["NONE", "HTTP_BASIC", "NTLM", "MTLS"],
+        default="NONE",
+        help="Define the authentication method for the monitoring",
+    )
 
     # Basic authentication options
-    basic_auth_group = http_group.add_argument_group(title="HTTP Basic Authentication Options")
-    basic_auth_group.add_argument("--http-username", help="Define the username for HTTP Basic authentication")
-    basic_auth_group.add_argument("--http-password", help="Define the password for HTTP Basic authentication")
+    basic_auth_group = http_group.add_argument_group(
+        title="HTTP Basic Authentication Options"
+    )
+    basic_auth_group.add_argument(
+        "--http-username", help="Define the username for HTTP Basic authentication"
+    )
+    basic_auth_group.add_argument(
+        "--http-password", help="Define the password for HTTP Basic authentication"
+    )
 
     # NTLM authentication options
     ntlm_auth_group = http_group.add_argument_group(title="NTLM Authentication Options")
-    ntlm_auth_group.add_argument("--domain", help="Define the domain for NTLM authentication")
-    ntlm_auth_group.add_argument("--workstation", help="Define the workstation for NTLM authentication")
+    ntlm_auth_group.add_argument(
+        "--domain", help="Define the domain for NTLM authentication"
+    )
+    ntlm_auth_group.add_argument(
+        "--workstation", help="Define the workstation for NTLM authentication"
+    )
 
     # MTLS authentication options
     mtls_auth_group = http_group.add_argument_group(title="MTLS Authentication Options")
-    mtls_auth_group.add_argument("--cert", help="Define the certificate for MTLS authentication")
+    mtls_auth_group.add_argument(
+        "--cert", help="Define the certificate for MTLS authentication"
+    )
     mtls_auth_group.add_argument("--key", help="Define the key for MTLS authentication")
-    mtls_auth_group.add_argument("--ca", help="Define the certificate authority for MTLS authentication")
-    
+    mtls_auth_group.add_argument(
+        "--ca", help="Define the certificate authority for MTLS authentication"
+    )
+
     # Keyword options
     keyword_group = monitor_parser.add_argument_group(title="Keyword Options")
-    keyword_group.add_argument("--keyword", help="Define the keyword to search for in the response")
-    
+    keyword_group.add_argument(
+        "--keyword", help="Define the keyword to search for in the response"
+    )
+
     # DNS options
     dns_group = monitor_parser.add_argument_group(title="DNS Options")
-    dns_group.add_argument("--resolver", help="Define the resolver server to use for DNS query")
-    dns_group.add_argument("--record", choices=["A", "AAAA", "CAA", "CNAME", "MX", "NS", "PTR", "SOA", "SRV", "TXT"], help="Define the DNS record type to query")
+    dns_group.add_argument(
+        "--resolver", help="Define the resolver server to use for DNS query"
+    )
+    dns_group.add_argument(
+        "--record",
+        choices=["A", "AAAA", "CAA", "CNAME", "MX", "NS", "PTR", "SOA", "SRV", "TXT"],
+        help="Define the DNS record type to query",
+    )
 
     # Docker options
     docker_group = monitor_parser.add_argument_group(title="Docker Options")
-    docker_group.add_argument("--container", help="Define the container name or id for the monitoring")
+    docker_group.add_argument(
+        "--container", help="Define the container name or id for the monitoring"
+    )
     docker_group.add_argument("--dhost", help="Define the Docker host to use")
 
     # MQTT options
     mqtt_group = monitor_parser.add_argument_group(title="MQTT Options")
     mqtt_group.add_argument("--topic", help="Define the MQTT topic to subscribe to")
-    mqtt_group.add_argument("--mqtt-username", help="Define the username for MQTT authentication")
-    mqtt_group.add_argument("--mqtt-password", help="Define the password for MQTT authentication")
+    mqtt_group.add_argument(
+        "--mqtt-username", help="Define the username for MQTT authentication"
+    )
+    mqtt_group.add_argument(
+        "--mqtt-password", help="Define the password for MQTT authentication"
+    )
 
     # Database options
     db_group = monitor_parser.add_argument_group(title="Database Options")
@@ -228,10 +327,19 @@ def monitor_parser(create_subparsers):
     # Radius options
     radius_group = monitor_parser.add_argument_group(title="Radius Options")
     radius_group.add_argument("--radius-secret", help="Define the Radius secret")
-    radius_group.add_argument("--radius-username", help="Define the username for Radius authentication")
-    radius_group.add_argument("--radius-password", help="Define the password for Radius authentication")
-    radius_group.add_argument("--radius-called", help="Define the called station ID for Radius authentication")
-    radius_group.add_argument("--radius-calling", help="Define the calling station ID for Radius authentication")
+    radius_group.add_argument(
+        "--radius-username", help="Define the username for Radius authentication"
+    )
+    radius_group.add_argument(
+        "--radius-password", help="Define the password for Radius authentication"
+    )
+    radius_group.add_argument(
+        "--radius-called", help="Define the called station ID for Radius authentication"
+    )
+    radius_group.add_argument(
+        "--radius-calling",
+        help="Define the calling station ID for Radius authentication",
+    )
 
     # Gamedig options
     gamedig_group = monitor_parser.add_argument_group(title="Gamedig Options")
@@ -239,9 +347,12 @@ def monitor_parser(create_subparsers):
     # Add validation function for monitor command
     monitor_parser.set_defaults(validate=validate_monitor_args, func=create_monitor)
 
+
 def add_subparser(subparsers):
     create_parser = subparsers.add_parser("create", help="Create a new object")
-    create_subparsers = create_parser.add_subparsers(title="Options", dest="create_command")
+    create_subparsers = create_parser.add_subparsers(
+        title="Options", dest="create_command"
+    )
 
     monitor_parser(create_subparsers)
 
@@ -250,7 +361,9 @@ def add_subparser(subparsers):
     status_parser.set_defaults(func=create_status_page)
 
     # Create maintenance
-    maintenance_parser = create_subparsers.add_parser("maintenance", help="Create a maintenance")
+    maintenance_parser = create_subparsers.add_parser(
+        "maintenance", help="Create a maintenance"
+    )
     maintenance_parser.set_defaults(func=create_maintenance)
 
 
@@ -258,7 +371,7 @@ def validate_monitor_args(args):
     # Custom validation for monitor command
     required_params = {
         "HTTP": ["url"],
-        "PORT": ["hostname","port"],
+        "PORT": ["hostname", "port"],
         "PING": ["hostname"],
         "KEYWORD": ["url", "keyword"],
         "GRPC_KEYWWORD": ["url", "keyword"],
@@ -271,8 +384,16 @@ def validate_monitor_args(args):
         "POSTGRES": ["dbcon", "query"],
         "MYSQL": ["dbcon", "query"],
         "MONGODB": ["dbcon", "query"],
-        "RADIUS": ["hostname", "port", "radius_username", "radius_password", "radius_secret", "radius_called", "radius_calling"],
-        "REDIS": ["dbcon"]
+        "RADIUS": [
+            "hostname",
+            "port",
+            "radius_username",
+            "radius_password",
+            "radius_secret",
+            "radius_called",
+            "radius_calling",
+        ],
+        "REDIS": ["dbcon"],
     }
 
     missing_params = []
@@ -282,6 +403,8 @@ def validate_monitor_args(args):
 
     if missing_params:
         param_list = ", ".join(missing_params)
-        raise argparse.ArgumentTypeError(f"Missing required parameters for type '{args.type}': {param_list}")
+        raise argparse.ArgumentTypeError(
+            f"Missing required parameters for type '{args.type}': {param_list}"
+        )
 
     return args
