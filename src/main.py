@@ -1,13 +1,13 @@
 import argparse
-from commands import create
+from commands import add
 
 
 def main():
-    parser = argparse.ArgumentParser(description="KumaCompanion CLI - Create")
+    parser = argparse.ArgumentParser(description="KumaCompanion CLI", prog="kuma")
     subparsers = parser.add_subparsers(title="Commands", dest="command")
 
     # Add subparsers for each top-level command
-    create.add_subparser(subparsers)
+    add.add_subparser(subparsers)
 
     args = parser.parse_args()
 

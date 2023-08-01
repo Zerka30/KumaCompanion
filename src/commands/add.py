@@ -3,7 +3,7 @@ import config
 from uptime_kuma_api import UptimeKumaApi, MonitorType
 
 
-def create_monitor(args):
+def add_monitor(args):
     monitorType = {
         "HTTP": MonitorType.HTTP,
         "PORT": MonitorType.PORT,
@@ -123,30 +123,30 @@ def create_monitor(args):
     # Appeler la méthode add_monitor pour créer le monitoring
     try:
         api.add_monitor(**monitor_data)
-        print("Monitor created successfully!")
+        print("Monitor added successfully!")
         api.disconnect()
     except Exception as e:
         api.disconnect()
         print("Error creating monitor:", str(e))
 
 
-def create_status_page(args):
+def add_status_page(args):
     # Logique pour créer une page de status
-    print("Status page created")
+    print("Status page added")
 
 
-def create_maintenance(args):
+def add_maintenance(args):
     # Logique pour créer une maintenance
-    print("Maintenance created")
+    print("Maintenance added")
 
 
 def normalize_type(value):
     return value.lower()
 
 
-def monitor_parser(create_subparsers):
-    # Create monitoring
-    monitor_parser = create_subparsers.add_parser("monitor", help="Create a monitoring")
+def monitor_parser(add_subparsers):
+    # Add monitoring
+    monitor_parser = add_subparsers.add_parser("monitor", help="Add a monitoring")
 
     # Specify options for the monitoring
     monitor_parser.add_argument(
@@ -345,26 +345,28 @@ def monitor_parser(create_subparsers):
     gamedig_group = monitor_parser.add_argument_group(title="Gamedig Options")
 
     # Add validation function for monitor command
-    monitor_parser.set_defaults(validate=validate_monitor_args, func=create_monitor)
+    monitor_parser.set_defaults(validate=validate_monitor_args, func=add_monitor)
 
 
 def add_subparser(subparsers):
-    create_parser = subparsers.add_parser("create", help="Create a new object")
-    create_subparsers = create_parser.add_subparsers(
-        title="Options", dest="create_command"
+    add_parser = subparsers.add_parser(
+        "add",
+        aliases=["create"],
+        help="Add a new object",
     )
+    add_subparsers = add_parser.add_subparsers(title="Options", dest="addmmand")
 
-    monitor_parser(create_subparsers)
+    monitor_parser(add_subparsers)
 
-    # Create status page
-    status_parser = create_subparsers.add_parser("status", help="Create a status page")
-    status_parser.set_defaults(func=create_status_page)
+    # Add status page
+    status_parser = add_subparsers.add_parser("status", help="Add a status page")
+    status_parser.set_defaults(func=add_status_page)
 
-    # Create maintenance
-    maintenance_parser = create_subparsers.add_parser(
-        "maintenance", help="Create a maintenance"
+    # Add maintenance
+    maintenance_parser = add_subparsers.add_parser(
+        "maintenance", help="Add a maintenance"
     )
-    maintenance_parser.set_defaults(func=create_maintenance)
+    maintenance_parser.set_defaults(func=add_maintenance)
 
 
 def validate_monitor_args(args):
