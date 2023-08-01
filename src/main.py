@@ -1,6 +1,7 @@
 import argparse
 from commands import create
 
+
 def main():
     parser = argparse.ArgumentParser(description="KumaCompanion CLI - Create")
     subparsers = parser.add_subparsers(title="Commands", dest="command")
@@ -20,8 +21,8 @@ def main():
 
         args.func(args)
     else:
-        print("YOOO")
         parser.print_help()
+
 
 def validate_monitor_args(args):
     # Custom validation for monitor command
@@ -30,6 +31,7 @@ def validate_monitor_args(args):
     if args.type == "Ping" and not args.hostname:
         raise argparse.ArgumentTypeError("--hostname is required for type 'Ping'")
     return args
+
 
 if __name__ == "__main__":
     main()
