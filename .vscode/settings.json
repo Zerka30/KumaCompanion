@@ -1,5 +1,5 @@
 {
-    "python.formatting.provider": "none",
+    "python.formatting.provider": "black",
     "editor.formatOnSave": true,
     "python.linting.flake8Args": [
         "--ignore=E501"
@@ -10,6 +10,6 @@
         100
     ],
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.python"
     }
 }
