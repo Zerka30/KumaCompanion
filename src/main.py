@@ -1,5 +1,6 @@
 import argparse
 from commands.monitor import monitor
+from commands.maintenance import maintenance
 
 
 def main():
@@ -8,6 +9,7 @@ def main():
 
     # Add subparsers for each top-level command
     monitor.add_subparser(subparsers)
+    maintenance.add_subparser(subparsers)
 
     args = parser.parse_args()
 
