@@ -50,6 +50,7 @@ def add_maintenance(args):
     # Add maintenance
     try:
         response = api.add_maintenance(**data)
+        maintenanceID = response["maintenanceID"]
     except Exception as e:
         api.disconnect()
         print("Error creating maintenance:", str(e))
@@ -58,22 +59,23 @@ def add_maintenance(args):
     impacted = []
     try:
         for monitor in args.impacted:
-            # We need to get the monitor ID and name
-            # First we need to see if user has provided a monitor ID or a monitor name
+            # First, check if the user provided a monitor ID or a monitor name
+            if monitor.isdigit():  # If user provided a monitor ID
+                monitor_id = int(monitor)
+                monitor_info = api.get_monitor(monitor_id)
+            else:  # If user provided a monitor name
+                monitor_info = next(
+                    (m for m in api.get_monitors() if m["name"] == monitor), None
+                )
 
-            # If user has provided a monitor ID
-            if monitor.isdigit():
-                monitor_id = monitor
-                monitor = api.get_monitor(monitor_id)
-                impacted.append({"id": monitor["id"], "name": monitor["name"]})
+            if monitor_info is not None:
+                impacted.append(
+                    {"id": monitor_info["id"], "name": monitor_info["name"]}
+                )
             else:
-                for _monitor in api.get_monitors():
-                    if _monitor["name"] == monitor:
-                        monitor = _monitor
-                        impacted.append({"id": monitor["id"], "name": monitor["name"]})
+                print(f"Monitor with ID or name '{monitor}' not found.")
 
-        response = api.add_monitor_maintenance(response["maintenanceID"], impacted)
-        print(response["msg"])
+        response = api.add_monitor_maintenance(maintenanceID, impacted)
         api.disconnect()
     except Exception as e:
         api.disconnect()
@@ -210,6 +212,13 @@ def maintenance_parser(subparsers):
         nargs="+",
         type=str,
         help="Set impacted monitors. You can specify monitor IDs and/or monitor names.",
+    )
+
+    maintenance_parser.add_argument(
+        "--statuspage",
+        nargs="+",
+        type=str,
+        help="Set status page. You can specify status page IDs and/or status page names.",
     )
 
     # Add options for specific strategy
