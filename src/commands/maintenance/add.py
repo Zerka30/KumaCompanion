@@ -39,8 +39,6 @@ def add_maintenance(args):
             data["cron"] = args.cron
             data["durationMinutes"] = args.duration
 
-    print(data)
-
     # Connection to Uptime Kuma API
     api = UptimeKumaApi(config.UPTIME_KUMA_URL)
     api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
@@ -48,15 +46,33 @@ def add_maintenance(args):
     # Creating a new maintenance
     # Delete key with None value
     data = {k: v for k, v in data.items() if v is not None}
-    print(data)
+
     # Add maintenance
     try:
         response = api.add_maintenance(**data)
+    except Exception as e:
+        api.disconnect()
+        print("Error creating maintenance:", str(e))
+
+    # Add impacted monitors
+    impacted = []
+    try:
+        for monitor in args.impacted:
+            # We need to get the monitor ID and name
+            # First we need to see if user has provided a monitor ID or a monitor name
+
+            # If user has provided a monitor ID
+            if monitor.isdigit():
+                monitor_id = monitor
+                monitor = api.get_monitor(monitor_id)
+                impacted.append({"id": monitor["id"], "name": monitor["name"]})
+
+        response = api.add_monitor_maintenance(response["maintenanceID"], impacted)
         print(response["msg"])
         api.disconnect()
     except Exception as e:
         api.disconnect()
-        print("Error creating maintenance:", str(e))
+        print("Error adding impacted monitors:", str(e))
 
 
 def weekday_list(values):
@@ -129,6 +145,18 @@ def parse_datetime(value):
         )
 
 
+def parse_impacted(value):
+    ids = []
+    names = []
+    for item in value:
+        # Vérifier si l'élément est un nombre (ID) ou une chaîne (nom)
+        if item.isdigit():
+            ids.append(item)
+        else:
+            names.append(item)
+    return ids, names
+
+
 def maintenance_parser(subparsers):
     maintenance_parser = subparsers.add_parser(
         "add",
@@ -170,6 +198,13 @@ def maintenance_parser(subparsers):
 
     maintenance_parser.add_argument(
         "-i", "--interval", type=int, help="Set maintenance interval"
+    )
+
+    maintenance_parser.add_argument(
+        "--impacted",
+        nargs="+",
+        type=str,
+        help="Set impacted monitors. You can specify monitor IDs and/or monitor names.",
     )
 
     # Add options for specific strategy
