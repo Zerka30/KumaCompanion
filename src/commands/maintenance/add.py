@@ -66,6 +66,11 @@ def add_maintenance(args):
                 monitor_id = monitor
                 monitor = api.get_monitor(monitor_id)
                 impacted.append({"id": monitor["id"], "name": monitor["name"]})
+            else:
+                for _monitor in api.get_monitors():
+                    if _monitor["name"] == monitor:
+                        monitor = _monitor
+                        impacted.append({"id": monitor["id"], "name": monitor["name"]})
 
         response = api.add_monitor_maintenance(response["maintenanceID"], impacted)
         print(response["msg"])
