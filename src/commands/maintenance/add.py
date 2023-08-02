@@ -175,18 +175,6 @@ def parse_datetime(value):
         )
 
 
-def parse_impacted(value):
-    ids = []
-    names = []
-    for item in value:
-        # Vérifier si l'élément est un nombre (ID) ou une chaîne (nom)
-        if item.isdigit():
-            ids.append(item)
-        else:
-            names.append(item)
-    return ids, names
-
-
 def maintenance_parser(subparsers):
     maintenance_parser = subparsers.add_parser(
         "add",
