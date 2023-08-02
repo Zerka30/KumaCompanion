@@ -61,13 +61,10 @@ def add_maintenance(args):
     monitors = api.get_monitors()
     try:
         for monitor in args.impacted:
-            # First, check if the user provided a monitor ID or a monitor name
-            if monitor.isdigit():  # If user provided a monitor ID
-                monitor_id = int(monitor)
-                monitor_info = api.get_monitor(monitor_id)
-            else:  # If user provided a monitor name
-                monitor_info = next((m for m in monitors if m["name"] == monitor), None)
-
+            monitor_info = next(
+                (m for m in monitors if m["name"] == monitor or m["id"] == monitor),
+                None,
+            )
             if monitor_info is not None:
                 impacted.append(
                     {"id": monitor_info["id"], "name": monitor_info["name"]}
