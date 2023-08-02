@@ -51,12 +51,14 @@ def add_maintenance(args):
     try:
         response = api.add_maintenance(**data)
         maintenanceID = response["maintenanceID"]
+        print(maintenanceID)
     except Exception as e:
         api.disconnect()
         print("Error creating maintenance:", str(e))
 
     # Add impacted monitors
     impacted = []
+    monitors = api.get_monitors()
     try:
         for monitor in args.impacted:
             # First, check if the user provided a monitor ID or a monitor name
@@ -64,9 +66,7 @@ def add_maintenance(args):
                 monitor_id = int(monitor)
                 monitor_info = api.get_monitor(monitor_id)
             else:  # If user provided a monitor name
-                monitor_info = next(
-                    (m for m in api.get_monitors() if m["name"] == monitor), None
-                )
+                monitor_info = next((m for m in monitors if m["name"] == monitor), None)
 
             if monitor_info is not None:
                 impacted.append(
@@ -76,10 +76,30 @@ def add_maintenance(args):
                 print(f"Monitor with ID or name '{monitor}' not found.")
 
         response = api.add_monitor_maintenance(maintenanceID, impacted)
-        api.disconnect()
     except Exception as e:
         api.disconnect()
         print("Error adding impacted monitors:", str(e))
+
+    # Add maintenance to status page
+    status_page = []
+    pages = api.get_status_pages()
+    try:
+        for page in args.statuspage:
+            page_info = next(
+                (p for p in pages if p["title"] == page or p["id"] == int(page)), None
+            )
+            if page_info is not None:
+                status_page.append({"id": page_info["id"], "name": page_info["title"]})
+            else:
+                print(f"Status page with ID or name '{page}' not found.")
+
+        print(status_page)
+        response = api.add_status_page_maintenance(maintenanceID, status_page)
+        print(response["msg"])
+        api.disconnect()
+    except Exception as e:
+        api.disconnect()
+        print("Error adding status page:", str(e))
 
 
 def weekday_list(values):
