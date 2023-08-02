@@ -51,7 +51,6 @@ def add_maintenance(args):
     try:
         response = api.add_maintenance(**data)
         maintenanceID = response["maintenanceID"]
-        print(maintenanceID)
     except Exception as e:
         api.disconnect()
         print("Error creating maintenance:", str(e))
@@ -60,9 +59,15 @@ def add_maintenance(args):
     impacted = []
     monitors = api.get_monitors()
     try:
+        if args.impacted is None:
+            args.impacted = []
         for monitor in args.impacted:
             monitor_info = next(
-                (m for m in monitors if m["name"] == monitor or m["id"] == monitor),
+                (
+                    m
+                    for m in monitors
+                    if m["name"] == monitor or m["id"] == int(monitor)
+                ),
                 None,
             )
             if monitor_info is not None:
@@ -81,6 +86,8 @@ def add_maintenance(args):
     status_page = []
     pages = api.get_status_pages()
     try:
+        if args.statuspage is None:
+            args.statuspage = []
         for page in args.statuspage:
             page_info = next(
                 (p for p in pages if p["title"] == page or p["id"] == int(page)), None
@@ -90,7 +97,6 @@ def add_maintenance(args):
             else:
                 print(f"Status page with ID or name '{page}' not found.")
 
-        print(status_page)
         response = api.add_status_page_maintenance(maintenanceID, status_page)
         print(response["msg"])
         api.disconnect()
