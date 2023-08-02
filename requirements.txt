@@ -3,3 +3,4 @@ uptime_kuma_api
 argparse
 flake8
 black
+tabulate
