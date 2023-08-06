@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 
 def config(args):
@@ -15,7 +16,7 @@ def config(args):
 
           """
     )
-    print("Version: " + os.environ["VERSION"])
+    print("Version: 1.0.0")
     print("Github: https://github.com/Zerka/KumaCompanion")
     print("")
 
@@ -28,8 +29,14 @@ def config(args):
             os.environ["UPTIME_KUMA_USERNAME"] = args.username
             os.environ["UPTIME_KUMA_PASSWORD"] = args.password
 
+            # Update the .bashrc file
+            update_bashrc()
+
             print(
                 "Configuration completed. Your credentials have been stored in environment variables."
+            )
+            print(
+                "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
             )
         else:
             print(
@@ -50,9 +57,48 @@ def config(args):
             os.environ["UPTIME_KUMA_USERNAME"] = username
             os.environ["UPTIME_KUMA_PASSWORD"] = password
 
+            # Update the .bashrc file
+            update_bashrc()
+
             print(
-                "Configuration completed. Your credentials have been stored in environment variables."
+                "\nConfiguration completed. Your credentials have been stored in environment variables."
             )
+            print(
+                "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
+            )
+
+
+def update_bashrc():
+    # Get the current user's home directory
+    home_dir = os.path.expanduser("~")
+
+    # Generate the lines to be added to the .bashrc file
+    lines = [
+        f'export UPTIME_KUMA_URL="{os.environ["UPTIME_KUMA_URL"]}"\n',
+        f'export UPTIME_KUMA_USERNAME="{os.environ["UPTIME_KUMA_USERNAME"]}"\n',
+        f'export UPTIME_KUMA_PASSWORD="{os.environ["UPTIME_KUMA_PASSWORD"]}"\n',
+    ]
+
+    # Remove old configuration lines from the .bashrc file
+    with open(f"{home_dir}/.bashrc", "r") as f:
+        bashrc_content = f.readlines()
+
+    with open(f"{home_dir}/.bashrc", "w") as f:
+        for line in bashrc_content:
+            if not any(
+                variable in line
+                for variable in [
+                    "UPTIME_KUMA_URL",
+                    "UPTIME_KUMA_USERNAME",
+                    "UPTIME_KUMA_PASSWORD",
+                ]
+            ):
+                f.write(line)
+
+        f.writelines(lines)
+
+    # Source the updated .bashrc file to load the environment variables
+    subprocess.run(f"source {home_dir}/.bashrc", shell=True, executable="/bin/bash")
 
 
 def print_configuration():
