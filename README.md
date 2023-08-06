@@ -15,9 +15,9 @@
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
     ·
-    <a href="https://github.com/Zerka30/KumaCompanion/issues">Report Bug</a>
+    <a href="https://github.com/Zerka30/KumaCompanion/issues/new/choose">Report Bug</a>
     ·
-    <a href="https://github.com/Zerka30/KumaCompanion/issues">Request Feature</a>
+    <a href="https://github.com/Zerka30/KumaCompanion/issues/new/choose">Request Feature</a>
 </p><br>
 <p align="center">
     <a href="#"><img src="https://img.shields.io/badge/python-%233570A0.svg?style=for-the-badge&logo=python&logoColor=FFE05D"> </a>
