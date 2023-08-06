@@ -1,4 +1,4 @@
-from . import add, ls
+from . import add, ls, delete
 
 
 def add_subparser(subparsers):
@@ -14,6 +14,7 @@ def add_subparser(subparsers):
     # Add subparsers for each subcommand
     add.monitor_parser(monitor_subparsers)
     ls.monitor_parser(monitor_subparsers)
+    delete.monitor_parser(monitor_subparsers)
 
     # Default action when no subcommand is provided
     monitor_parser.set_defaults(func=lambda _: monitor_parser.print_help())
