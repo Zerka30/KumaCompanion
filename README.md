@@ -38,7 +38,7 @@ Note: This project is currently under development and may be incomplete.
 
 - [x] Commands: `kuma monitor`
     - [x] `add`
-    - [ ] `delete`
+    - [x] `delete`
     - [ ] `edit`
     - [x] `ls`
     - [ ] `get`
