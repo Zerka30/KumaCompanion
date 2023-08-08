@@ -1,5 +1,7 @@
 import os
 import subprocess
+from uptime_kuma_api import UptimeKumaApi, UptimeKumaException, Timeout
+from socketio.exceptions import TimeoutError
 
 
 def config(args):
@@ -24,6 +26,28 @@ def config(args):
         print_configuration()
     else:
         if args.url and args.username and args.password:
+            try:
+                api = UptimeKumaApi(args.url)
+                result, error_message = is_correct_credentials(
+                    api, args.username, args.password
+                )
+                api.disconnect()
+                # Use the function directly in the if statement
+                # raise Timeout()
+                if result:
+                    print("\n✓ Login successful")
+                else:
+                    print("\nLogin failed:", error_message)
+                    return
+            except (Timeout, TimeoutError):
+                api.disconnect()
+                print("\nLogin failed: Connection timed out")
+                return
+            except Exception as e:
+                api.disconnect()
+                print("\nLogin failed:", e)
+                return
+
             # Set the environment variables
             os.environ["UPTIME_KUMA_URL"] = args.url
             os.environ["UPTIME_KUMA_USERNAME"] = args.username
@@ -33,7 +57,7 @@ def config(args):
             update_bashrc()
 
             print(
-                "Configuration completed. Your credentials have been stored in environment variables."
+                "\nConfiguration completed. Your credentials have been stored in environment variables."
             )
             print(
                 "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
@@ -50,6 +74,25 @@ def config(args):
                 password = input("Password: ")
             except (KeyboardInterrupt, EOFError):
                 print("\n\nConfiguration aborted.")
+                return
+
+            try:
+                api = UptimeKumaApi(url)
+                result, error_message = is_correct_credentials(api, username, password)
+                api.disconnect()
+                # Use the function directly in the if statement
+                if result:
+                    print("\n✓ Login successful")
+                else:
+                    print("\nLogin failed:", error_message)
+                    return
+            except (Timeout, TimeoutError):
+                api.disconnect()
+                print("\nLogin failed: Connection timed out")
+                return
+            except Exception as e:
+                api.disconnect()
+                print("\nLogin failed:", e)
                 return
 
             # Set the environment variables
@@ -144,3 +187,13 @@ def add_subparser(subparsers):
 
     # Default action when no subcommand is provided
     config_parser.set_defaults(func=config)
+
+
+def is_correct_credentials(api, user, password):
+    try:
+        api.login(user, password)
+        api.disconnect()
+        return True, None
+    except UptimeKumaException as e:
+        api.disconnect()
+        return False, e
