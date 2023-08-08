@@ -10,6 +10,7 @@ def main():
     subparsers = parser.add_subparsers(title="Commands", dest="command")
 
     parser.add_argument(
+        "-v",
         "--version",
         action="version",
         version="KumaCompanion v" + cfg.VERSION,
@@ -34,15 +35,6 @@ def main():
         args.func(args)
     else:
         parser.print_help()
-
-
-def validate_monitor_args(args):
-    # Custom validation for monitor command
-    if args.type == "HTTP" and not args.url:
-        raise argparse.ArgumentTypeError("--url is required for type 'HTTP'")
-    if args.type == "Ping" and not args.hostname:
-        raise argparse.ArgumentTypeError("--hostname is required for type 'Ping'")
-    return args
 
 
 if __name__ == "__main__":
