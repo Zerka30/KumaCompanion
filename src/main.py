@@ -1,4 +1,5 @@
 import argparse
+import config as cfg
 from commands.monitor import monitor
 from commands.maintenance import maintenance
 from commands.config import config
@@ -7,6 +8,13 @@ from commands.config import config
 def main():
     parser = argparse.ArgumentParser(description="KumaCompanion CLI", prog="kuma")
     subparsers = parser.add_subparsers(title="Commands", dest="command")
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="KumaCompanion v" + cfg.VERSION,
+        help="Show KumaCompanion version",
+    )
 
     # Add subparsers for each top-level command
     monitor.add_subparser(subparsers)
