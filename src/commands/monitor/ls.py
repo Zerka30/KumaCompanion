@@ -1,5 +1,5 @@
 import config
-from uptime_kuma_api import UptimeKumaApi
+from uptime_kuma_api import UptimeKumaApi, Timeout
 from tabulate import tabulate
 import os
 
@@ -55,11 +55,21 @@ def ls_monitors(args):
         args: The arguments passed to the ls command.
     """
     # Connexion a notre instance uptime kuma
-    api = UptimeKumaApi(config.UPTIME_KUMA_URL)
-    api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
+    api = UptimeKumaApi(config.UPTIME_KUMA_URL, timeout=0.5)
+
+    # Retry to login, until it works
+    success = False
+    while not success:
+        try:
+            api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
+            success = True
+        except Exception:
+            success = False
+
+    monitors = []
+
     try:
         monitors = api.get_monitors()
-        api.disconnect()
     except Exception as e:
         api.disconnect()
         print("Error listing monitors:", str(e))
@@ -67,11 +77,9 @@ def ls_monitors(args):
 
     monitors_data_table = []
     for monitor in monitors:
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
         try:
             monitor_beats = api.get_monitor_beats(monitor["id"], 1)
-            api.disconnect()
+            # print(monitor_beats)
         except Exception as e:
             api.disconnect()
             print("Error listing monitors:", str(e))
@@ -91,13 +99,43 @@ def ls_monitors(args):
                     data_row.append(monitor["type"].name)
 
                 if not args.no_url:
-                    data_row.append(monitor["url"])
+                    url = monitor["url"] or ""
+                    hostname = monitor["hostname"] or ""
+                    hostname_port = (
+                        (hostname + ":" + str(monitor["port"]))
+                        if hostname and monitor["port"]
+                        else ""
+                    )
+                    dbcon = monitor["databaseConnectionString"] or ""
+                    container = monitor["docker_container"] or ""
+
+                    value = {
+                        "http": url,
+                        "port": hostname_port,
+                        "ping": hostname,
+                        "keyword": url,
+                        "grpc_keyword": url,
+                        "dns": hostname,
+                        "docker": container,
+                        "steam": hostname_port,
+                        "gamedig": hostname_port,
+                        "mqtt": hostname_port,
+                        "sqlserver": dbcon,
+                        "postgres": dbcon,
+                        "mysql": dbcon,
+                        "mongodb": dbcon,
+                        "radius": hostname_port,
+                        "redis": dbcon,
+                    }
+
+                    type = monitor["type"].name.lower()
+                    data_row.append(value[type])
 
                 if not args.no_description:
                     data_row.append(monitor["description"])
 
             monitors_data_table.append(data_row)
-
+            # print(monitors_data_table)
     headers = ["NAME", "STATUS"]
 
     if not args.short:
@@ -107,7 +145,7 @@ def ls_monitors(args):
             headers.append("TYPE")
 
         if not args.no_url:
-            headers.append("URL")
+            headers.append("HOSTNAME")
 
         if not args.no_description:
             headers.append("DESCRIPTION")
@@ -119,3 +157,5 @@ def ls_monitors(args):
             tablefmt="plain",
         )
     )
+
+    api.disconnect()
