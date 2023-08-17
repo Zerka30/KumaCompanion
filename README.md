@@ -36,14 +36,14 @@ Note: This project is currently under development and may be incomplete.
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Commands: `kuma monitor`
+- [ ] Commands: `kuma monitor`
     - [x] `add`
     - [x] `delete`
-    - [ ] `edit`
+    - [x] `edit`
     - [x] `ls`
     - [ ] `get`
-    - [ ] `pause`
-    - [ ] `resume`
+    - [x] `pause`
+    - [x] `resume`
 - [ ] Commands : `kuma maintenance`
     - [x] `add`
     - [ ] `delete`
