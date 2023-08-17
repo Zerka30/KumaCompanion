@@ -191,7 +191,6 @@ def monitor_parser(subparsers):
         help="Define the number of times to resend requests before considering the service as down",
     )
     monitor_parser.add_argument(
-        "-m",
         "--maxretries",
         type=int,
         help="Define the maximum number of retries before the service is marked as down and a notification is sent",
