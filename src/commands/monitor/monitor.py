@@ -1,4 +1,4 @@
-from . import add, ls, delete, pause, resume, edit
+from . import add, ls, delete, pause, edit
 
 
 def add_subparser(subparsers):
@@ -15,7 +15,6 @@ def add_subparser(subparsers):
     add.monitor_parser(monitor_subparsers)
     ls.monitor_parser(monitor_subparsers)
     delete.monitor_parser(monitor_subparsers)
-    resume.monitor_parser(monitor_subparsers)
     pause.monitor_parser(monitor_subparsers)
     edit.monitor_parser(monitor_subparsers)
 
