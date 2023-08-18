@@ -21,4 +21,8 @@ jobs:
         
     - name: Run tests
       run: |
-        export PYTHONPATH=$PWD/src && pytest --reruns 5 --only-rerun socketio.exceptions.TimeoutError
+        export PYTHONPATH=$PWD/src
+        export UPTIME_KUMA_URL=${{ secrets.UPTIME_KUMA_URL }}
+        export UPTIME_KUMA_USERNAME=${{ secrets.UPTIME_KUMA_USERNAME }}
+        export UPTIME_KUMA_PASSWORD=${{ secrets.UPTIME_KUMA_PASSWORD }}
+        pytest --reruns 5 --only-rerun socketio.exceptions.TimeoutError
