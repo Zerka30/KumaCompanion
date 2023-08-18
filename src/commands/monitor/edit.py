@@ -5,24 +5,24 @@ from uptime_kuma_api import UptimeKumaApi, MonitorType
 
 def edit_monitor(args):
     monitorType = {
-        "HTTP": MonitorType.HTTP,
-        "PORT": MonitorType.PORT,
-        "PING": MonitorType.PING,
-        "KEYWORD": MonitorType.KEYWORD,
-        "GRPC_KEYWORD": MonitorType.GRPC_KEYWORD,
-        "DNS": MonitorType.DNS,
-        "DOCKER": MonitorType.DOCKER,
-        "PUSH": MonitorType.PUSH,
-        "STEAM": MonitorType.STEAM,
-        "GAMEDIG": MonitorType.GAMEDIG,
-        "MQTT": MonitorType.MQTT,
-        "SQLSERVER": MonitorType.SQLSERVER,
-        "POSTGRES": MonitorType.POSTGRES,
-        "MYSQL": MonitorType.MYSQL,
-        "MONGODB": MonitorType.MONGODB,
-        "RADIUS": MonitorType.RADIUS,
-        "REDIS": MonitorType.REDIS,
-        "GROUP": MonitorType.GROUP,
+        "http": MonitorType.HTTP,
+        "port": MonitorType.PORT,
+        "ping": MonitorType.PING,
+        "keyword": MonitorType.KEYWORD,
+        "grpc_keyword": MonitorType.GRPC_KEYWORD,
+        "dns": MonitorType.DNS,
+        "docker": MonitorType.DOCKER,
+        "push": MonitorType.PUSH,
+        "steam": MonitorType.STEAM,
+        "gamedig": MonitorType.GAMEDIG,
+        "mqtt": MonitorType.MQTT,
+        "sqlserver": MonitorType.SQLSERVER,
+        "postgres": MonitorType.POSTGRES,
+        "mysql": MonitorType.MYSQL,
+        "mongodb": MonitorType.MONGODB,
+        "radius": MonitorType.RADIUS,
+        "redis": MonitorType.REDIS,
+        "group": MonitorType.GROUP,
     }
 
     monitor_data = {
@@ -39,10 +39,10 @@ def edit_monitor(args):
     }
 
     if args.type is not None:
-        monitor_data["type"] = monitorType[args.type.upper()]
+        monitor_data["type"] = monitorType[args.type.lower()]
 
-    match args.type:
-        case "HTTP":
+    match args.type.lower():
+        case "http":
             monitor_data["url"] = args.url
             monitor_data["expiryNotification"] = args.expirynotification
             monitor_data["ignoreTls"] = args.ignoretls
@@ -55,43 +55,43 @@ def edit_monitor(args):
             monitor_data["authMethod"] = args.authmethod
 
             match args.authmethod:
-                case "HTTP_BASIC":
+                case "http_basic":
                     monitor_data["basic_auth_user"] = args.http_username
                     monitor_data["basic_auth_pass"] = args.http_password
 
-                case "NTLM":
+                case "ntlm":
                     monitor_data["basic_auth_user"] = args.http_username
                     monitor_data["basic_auth_pass"] = args.http_password
                     monitor_data["authDomain"] = args.domain
                     monitor_data["authWorkstation"] = args.workstation
 
-                case "MTLS":
+                case "mtls":
                     monitor_data["tlsCert"] = args.cert
                     monitor_data["tlsKey"] = args.key
                     monitor_data["tlsCa"] = args.ca
 
-        case "Ping":
+        case "ping":
             monitor_data["hostname"] = args.hostname
 
-        case "Keyword" | "GRPC_KEYWORD":
+        case "keyword" | "grpc_keyword":
             monitor_data["url"] = args.url
             monitor_data["keyword"] = args.keyword
 
-        case "DNS":
+        case "dns":
             monitor_data["hostname"] = args.hostname
             monitor_data["dns_resolve_server"] = args.resolver
             monitor_data["dns_resolve_type"] = args.record
 
-        case "Docker":
+        case "docker":
             monitor_data["docker_container"] = args.container
             monitor_data["docker_host"] = args.dhost
 
-        case "GameDig":
+        case "gamedig":
             monitor_data["hostname"] = args.hostname
             monitor_data["port"] = args.port
             monitor_data["game"] = args.game
 
-        case "MQTT":
+        case "mqtt":
             monitor_data["hostname"] = args.hostname
             monitor_data["port"] = args.port
             monitor_data["mqttTopic"] = args.topic
@@ -99,11 +99,11 @@ def edit_monitor(args):
             monitor_data["mqttPassword"] = args.mqtt_password
             monitor_data["mqttSuccessMessage"] = args.mqtt_success
 
-        case "SQLServer" | "Postgres" | "MySQL" | "MongoDB":
+        case "sqlserver" | "postgres" | "mysql" | "mongodb":
             monitor_data["databaseConnectionString"] = args.dbcon
             monitor_data["databaseQuery"] = args.query
 
-        case "Radius":
+        case "radius":
             monitor_data["hostname"] = args.hostname
             monitor_data["port"] = args.port
             monitor_data["radiusSecret"] = args.radius_secret
@@ -112,8 +112,8 @@ def edit_monitor(args):
             monitor_data["radiusCalledStationId"] = args.radius_called
             monitor_data["radiusCallingStationId"] = args.radius_calling
 
-        case "Redis":
-            monitor_data["dbcon"] = args.dbcon
+        case "redis":
+            monitor_data["dbcon"] = args.dbco
 
     # Delete empty key
     monitor_data = {k: v for k, v in monitor_data.items() if v is not None}
