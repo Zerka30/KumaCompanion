@@ -136,6 +136,7 @@ def edit_monitor(args):
         response = api.edit_monitor(monitor_id[0], **monitor_data)
         print(response["msg"])
         api.disconnect()
+        return response["msg"]
     except Exception as e:
         api.disconnect()
         print("Error updating monitors:", str(e))

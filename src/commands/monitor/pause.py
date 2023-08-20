@@ -12,6 +12,7 @@ def pause_monitor(args):
     monitors = api.get_monitors()
 
     try:
+        result = []
         if args.monitor is None:
             args.monitor = []
         for monitor in args.monitor:
@@ -23,7 +24,9 @@ def pause_monitor(args):
         for monitor_id in monitors_ids:
             response = api.pause_monitor(monitor_id)
             print(response["msg"])
+            result.append(response["msg"])
         api.disconnect()
+        return result
     except Exception as e:
         api.disconnect()
         print("Error deleting monitors:", str(e))
