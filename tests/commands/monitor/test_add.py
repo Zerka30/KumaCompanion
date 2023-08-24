@@ -92,7 +92,7 @@ def test_add_monitor_port():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -141,7 +141,7 @@ def test_add_monitor_ping():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -191,7 +191,7 @@ def test_add_monitor_keyword():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -244,7 +244,7 @@ def test_add_monitor_dns():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -299,7 +299,7 @@ def test_add_monitor_docker():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -353,7 +353,7 @@ def test_add_monitor_gamedig():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -408,8 +408,7 @@ def test_add_monitor_db():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
-
+        monitors = KumaCompanion().get_api().get_monitors()
         for monitor in monitors:
             if monitor["name"] == name:
                 assert monitor["name"] == name

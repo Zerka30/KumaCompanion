@@ -7,7 +7,7 @@ import argparse
 def test_delete_monitor_id():
     try:
         monitor_id = None
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
         for monitor in monitors:
             if monitor["name"] == "Python Test - HTTP":
                 monitor_id = monitor["id"]
