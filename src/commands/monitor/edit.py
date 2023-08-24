@@ -1,6 +1,5 @@
-import argparse
-import config
-from uptime_kuma_api import UptimeKumaApi, MonitorType
+from api.KumaCompanion import KumaCompanion
+from uptime_kuma_api import MonitorType
 
 
 def edit_monitor(args):
@@ -119,8 +118,7 @@ def edit_monitor(args):
     monitor_data = {k: v for k, v in monitor_data.items() if v is not None}
 
     # Connection to uptime kuma instance
-    api = UptimeKumaApi(config.UPTIME_KUMA_URL)
-    api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
+    api = KumaCompanion().get_api()
 
     # Fetch monitor
     monitor_id = []
