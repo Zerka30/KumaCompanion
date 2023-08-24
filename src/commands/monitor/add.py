@@ -1,6 +1,6 @@
 import argparse
-import config
-from uptime_kuma_api import UptimeKumaApi, MonitorType
+from uptime_kuma_api import MonitorType
+from api.KumaCompanion import KumaCompanion
 
 
 def add_monitor(args):
@@ -113,8 +113,7 @@ def add_monitor(args):
             monitor_data["dbcon"] = args.dbcon
 
     # Connexion a notre instance uptime kuma
-    api = UptimeKumaApi(config.UPTIME_KUMA_URL)
-    api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
+    api = KumaCompanion().get_api()
 
     # Création d'un monitoring
     # Suppression des clés avec valeur None
@@ -123,10 +122,10 @@ def add_monitor(args):
     try:
         response = api.add_monitor(**monitor_data)
         print(response["msg"])
-        api.disconnect()
+        # api.disconnect()
         return response["msg"]
     except Exception as e:
-        api.disconnect()
+        # api.disconnect()
         print("Error creating monitor:", str(e))
 
 
@@ -339,6 +338,9 @@ def monitor_parser(subparsers):
 
     # Add validation function for monitor command
     monitor_parser.set_defaults(validate=validate_monitor_args, func=add_monitor)
+
+    # Disconnect from API
+    KumaCompanion().disconnect()
 
 
 def validate_monitor_args(args):

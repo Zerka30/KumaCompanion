@@ -1,10 +1,9 @@
 # tests/commands/monitor/test_add.py
 
 from commands.monitor.add import add_monitor
-import config
+from api.KumaCompanion import KumaCompanion
 from uptime_kuma_api import MonitorType
 import argparse
-from KumaTest import KumaTest
 
 
 # Test add http monitor
@@ -43,7 +42,7 @@ def test_add_monitor_http():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        monitors = KumaTest().get_monitors()
+        monitors = KumaCompanion().get_api().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:

@@ -1,11 +1,9 @@
-import config
-from uptime_kuma_api import UptimeKumaApi
+from api.KumaCompanion import KumaCompanion
 
 
 def pause_monitor(args):
     # Connect to uptime kuma instance
-    api = UptimeKumaApi(config.UPTIME_KUMA_URL)
-    api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
+    api = KumaCompanion().get_api()
 
     # Pause d'un monitoring
     monitors_ids = []
@@ -25,10 +23,10 @@ def pause_monitor(args):
             response = api.pause_monitor(monitor_id)
             print(response["msg"])
             result.append(response["msg"])
-        api.disconnect()
+        # api.disconnect()
         return result
     except Exception as e:
-        api.disconnect()
+        # api.disconnect()
         print("Error deleting monitors:", str(e))
 
 

@@ -3,6 +3,7 @@ import config as cfg
 from commands.monitor import monitor
 from commands.maintenance import maintenance
 from commands.config import config
+from api.KumaCompanion import KumaCompanion
 
 
 def main():
@@ -39,3 +40,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    KumaCompanion().disconnect()
