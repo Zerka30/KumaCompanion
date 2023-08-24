@@ -1,7 +1,6 @@
-import config
-from uptime_kuma_api import UptimeKumaApi, Timeout
-from tabulate import tabulate
+from api.KumaCompanion import KumaCompanion
 import os
+from tabulate import tabulate
 
 
 def monitor_parser(subparsers):
@@ -55,23 +54,13 @@ def ls_monitors(args):
         args: The arguments passed to the ls command.
     """
     # Connexion a notre instance uptime kuma
-    api = UptimeKumaApi(config.UPTIME_KUMA_URL, timeout=0.5)
-
-    # Retry to login, until it works
-    success = False
-    while not success:
-        try:
-            api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-            success = True
-        except Exception:
-            success = False
+    api = KumaCompanion().get_api()
 
     monitors = []
 
     try:
         monitors = api.get_monitors()
     except Exception as e:
-        api.disconnect()
         print("Error listing monitors:", str(e))
         os._exit(1)
 
@@ -81,7 +70,6 @@ def ls_monitors(args):
             monitor_beats = api.get_monitor_beats(monitor["id"], 1)
             # print(monitor_beats)
         except Exception as e:
-            api.disconnect()
             print("Error listing monitors:", str(e))
             os._exit(1)
 
@@ -157,5 +145,3 @@ def ls_monitors(args):
             tablefmt="plain",
         )
     )
-
-    api.disconnect()

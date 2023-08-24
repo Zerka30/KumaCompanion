@@ -1,0 +1,28 @@
+name: Run python tests
+
+on: [push]
+
+jobs:
+  pytest:
+    runs-on: self-hosted
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Installez vos dépendances
+        
+    - name: Run tests
+      run: |
+        export PYTHONPATH=$PWD/src
+        export UPTIME_KUMA_URL=${{ secrets.UPTIME_KUMA_URL }}
+        export UPTIME_KUMA_USERNAME=${{ secrets.UPTIME_KUMA_USERNAME }}
+        export UPTIME_KUMA_PASSWORD=${{ secrets.UPTIME_KUMA_PASSWORD }}
+        pytest --reruns 5 --only-rerun socketio.exceptions.TimeoutError
