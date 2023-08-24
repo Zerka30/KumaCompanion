@@ -51,7 +51,14 @@ def test_delete_list_monitors_id():
 
 # Test delete list monitors by name
 def test_delete_list_monitors_name():
-    args = argparse.Namespace(monitor=["Python Test - Docker", "Python Test - GameDig"])
+    args = argparse.Namespace(
+        monitor=[
+            "Python Test - Docker",
+            "Python Test - GameDig",
+            "Python Test - Keyword",
+            "Python Test - Database",
+        ]
+    )
     result = delete_monitor(args)
     assert "Deleted Successfully." in result
-    assert result.count("Deleted Successfully.") == 2
+    assert result.count("Deleted Successfully.") == 4
