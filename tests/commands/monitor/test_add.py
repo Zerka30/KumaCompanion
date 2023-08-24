@@ -2,8 +2,9 @@
 
 from commands.monitor.add import add_monitor
 import config
-from uptime_kuma_api import UptimeKumaApi, MonitorType
+from uptime_kuma_api import MonitorType
 import argparse
+from KumaTest import KumaTest
 
 
 # Test add http monitor
@@ -42,10 +43,7 @@ def test_add_monitor_http():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -55,7 +53,7 @@ def test_add_monitor_http():
                 break
 
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add port monitor
@@ -95,10 +93,7 @@ def test_add_monitor_port():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -108,7 +103,7 @@ def test_add_monitor_port():
                 assert monitor["type"] == MonitorType.PORT
                 break
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add ping monitor
@@ -147,10 +142,7 @@ def test_add_monitor_ping():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -159,7 +151,7 @@ def test_add_monitor_ping():
                 assert monitor["type"] == MonitorType.PING
                 break
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add keyword monitor
@@ -200,10 +192,7 @@ def test_add_monitor_keyword():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -213,7 +202,7 @@ def test_add_monitor_keyword():
                 assert monitor["type"] == MonitorType.KEYWORD
                 break
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add dns monitor
@@ -256,10 +245,7 @@ def test_add_monitor_dns():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -270,7 +256,7 @@ def test_add_monitor_dns():
                 assert monitor["type"] == MonitorType.DNS
                 break
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add docker monitor
@@ -314,10 +300,7 @@ def test_add_monitor_docker():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -327,7 +310,7 @@ def test_add_monitor_docker():
                 assert monitor["type"] == MonitorType.DOCKER
                 break
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add gamedig monitor
@@ -371,10 +354,7 @@ def test_add_monitor_gamedig():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -385,7 +365,7 @@ def test_add_monitor_gamedig():
                 assert monitor["type"] == MonitorType.GAMEDIG
                 break
     finally:
-        api.disconnect()
+        pass
 
 
 # Test add database monitor
@@ -429,10 +409,7 @@ def test_add_monitor_db():
         assert result == "Added Successfully."
 
         # Fetch the monitor
-        api = UptimeKumaApi(config.UPTIME_KUMA_URL, 1)
-        api.login(config.UPTIME_KUMA_USERNAME, config.UPTIME_KUMA_PASSWORD)
-
-        monitors = api.get_monitors()
+        monitors = KumaTest().get_monitors()
 
         for monitor in monitors:
             if monitor["name"] == name:
@@ -442,4 +419,4 @@ def test_add_monitor_db():
                 assert monitor["type"] == MonitorType.MYSQL
                 break
     finally:
-        api.disconnect()
+        pass
