@@ -45,7 +45,10 @@ def main():
                 monitor_id = []
 
                 for monitor in monitors:
-                    if args.exclude not in monitor["name"]:
+                    if args.exclude is not None:
+                        if args.exclude not in monitor["name"]:
+                            monitor_id.append(monitor["id"])
+                    else:
                         monitor_id.append(monitor["id"])
                 for monitor_id in monitor_id:
                     response = api.delete_monitor(monitor_id)
@@ -58,14 +61,18 @@ def main():
             try:
                 # Connect to uptime kuma instance
                 statuses = api.get_status_pages()
-                status_id = []
+                status_page = []
 
                 for status in statuses:
-                    if args.exclude not in status["name"]:
-                        status_id.append(status["id"])
-                for status_id in status_id:
-                    response = api.delete_status_page(status_id)
-                    print(response["msg"])
+                    # Check if we need to exclude a status page
+                    if args.exclude is not None:
+                        if args.exclude not in status["title"]:
+                            status_page.append(status["slug"])
+                    else:
+                        status_page.append(status["slug"])
+                for status_page in status_page:
+                    response = api.delete_status_page(status_page)
+                    print("Deleted Successfully.")
                 KumaCompanion().disconnect()
             except Exception as e:
                 KumaCompanion().disconnect()
@@ -77,7 +84,11 @@ def main():
                 maintenance_id = []
 
                 for maintenance in maintenances:
-                    if args.exclude not in maintenance["name"]:
+                    # Check if we need to exclude a maintenance
+                    if args.exclude is not None:
+                        if args.exclude not in maintenance["title"]:
+                            maintenance_id.append(maintenance["id"])
+                    else:
                         maintenance_id.append(maintenance["id"])
                 for maintenance_id in maintenance_id:
                     response = api.delete_maintenance(maintenance_id)
@@ -88,31 +99,45 @@ def main():
                 print("Error deleting maintenances:", str(e))
         case "all":
             try:
+                # Connect to uptime kuma instance
                 monitors = api.get_monitors()
                 monitor_id = []
 
                 for monitor in monitors:
-                    if args.exclude not in monitor["name"]:
+                    if args.exclude is not None:
+                        if args.exclude not in monitor["name"]:
+                            monitor_id.append(monitor["id"])
+                    else:
                         monitor_id.append(monitor["id"])
                 for monitor_id in monitor_id:
                     response = api.delete_monitor(monitor_id)
                     print(response["msg"])
 
+                # Connect to uptime kuma instance
                 statuses = api.get_status_pages()
-                status_id = []
+                status_page = []
 
                 for status in statuses:
-                    if args.exclude not in status["name"]:
-                        status_id.append(status["id"])
-                for status_id in status_id:
-                    response = api.delete_status_page(status_id)
-                    print(response["msg"])
+                    # Check if we need to exclude a status page
+                    if args.exclude is not None:
+                        if args.exclude not in status["title"]:
+                            status_page.append(status["slug"])
+                    else:
+                        status_page.append(status["slug"])
+                for status_page in status_page:
+                    response = api.delete_status_page(status_page)
+                    print("Deleted Successfully.")
 
+                # Connect to uptime kuma instance
                 maintenances = api.get_maintenances()
                 maintenance_id = []
 
                 for maintenance in maintenances:
-                    if args.exclude not in maintenance["name"]:
+                    # Check if we need to exclude a maintenance
+                    if args.exclude is not None:
+                        if args.exclude not in maintenance["title"]:
+                            maintenance_id.append(maintenance["id"])
+                    else:
                         maintenance_id.append(maintenance["id"])
                 for maintenance_id in maintenance_id:
                     response = api.delete_maintenance(maintenance_id)
