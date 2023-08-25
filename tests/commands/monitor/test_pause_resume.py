@@ -5,7 +5,7 @@ import argparse
 
 # Test pause a single monitor by id
 def test_pause_monitor_id():
-    args = argparse.Namespace(monitor=[45])
+    args = argparse.Namespace(monitor=[374])
     result = pause_monitor(args)
     assert result[0] == "Paused Successfully."
 
@@ -19,7 +19,7 @@ def test_pause_monitor_name():
 
 # Test list of monitors by id
 def test_pause_monitor_list_id():
-    args = argparse.Namespace(monitor=[47, 48])
+    args = argparse.Namespace(monitor=[376, 377])
     result = pause_monitor(args)
     assert "Paused Successfully." in result
     assert result.count("Paused Successfully.") == 2
@@ -35,7 +35,7 @@ def test_pause_monitor_list_name():
 
 # Test resume a single monitor by id
 def test_resume_monitor_id():
-    args = argparse.Namespace(monitor=[45])
+    args = argparse.Namespace(monitor=[374])
     result = resume_monitor(args)
     assert result[0] == "Resumed Successfully."
 
@@ -49,7 +49,7 @@ def test_resume_monitor_name():
 
 # Test resume list of monitors by id
 def test_resume_monitor_list_id():
-    args = argparse.Namespace(monitor=[47, 48])
+    args = argparse.Namespace(monitor=[376, 377])
     result = resume_monitor(args)
     assert "Resumed Successfully." in result
     assert result.count("Resumed Successfully.") == 2
