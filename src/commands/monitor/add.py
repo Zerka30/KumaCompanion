@@ -25,107 +25,104 @@ def add_monitor(args):
         "group": MonitorType.GROUP,
     }
 
-    monitor_data = {
-        "type": monitorType[args.type.lower()],
-        "name": args.name,
-        "parent": args.parent,
-        "description": args.description,
-        "interval": args.interval,
-        "retryInterval": args.retry,
-        "resendInterval": args.resend,
-        "maxretries": args.maxretries,
-        "port": args.port,
-        "url": args.url,
-        "hostname": args.hostname,
+    # Define common keys that apply to all monitor types
+    common_keys = [
+        "name",
+        "parent",
+        "description",
+        "interval",
+        "retryInterval",
+        "resendInterval",
+        "maxretries",
+    ]
+
+    # Initialize the monitor_data dictionary with common keys
+    monitor_data = {key: getattr(args, key, None) for key in common_keys}
+
+    additional_keys = {
+        "http": [
+            "url",
+            "expiryNotification",
+            "ignoreTls",
+            "accepted_statuscodes",
+            "proxyId",
+            "method",
+            "httpBodyEncoding",
+            "body",
+            "headers",
+            "authMethod",
+        ],
+        "port": ["hostname", "port"],
+        "ping": ["hostname"],
+        "keyword": ["url", "keyword"],
+        "grpc_keyword": ["url", "keyword"],
+        "dns": ["hostname", "dns_resolve_server", "dns_resolve_type"],
+        "docker": ["docker_container", "docker_host"],
+        "gamedig": ["hostname", "port", "game"],
+        "mqtt": [
+            "hostname",
+            "port",
+            "mqttTopic",
+            "mqttUsername",
+            "mqttPassword",
+            "mqttSuccessMessage",
+        ],
+        "sqlserver": ["databaseConnectionString", "databaseQuery"],
+        "postgres": ["databaseConnectionString", "databaseQuery"],
+        "mysql": ["databaseConnectionString", "databaseQuery"],
+        "mongodb": ["databaseConnectionString", "databaseQuery"],
+        "radius": [
+            "hostname",
+            "port",
+            "radiusSecret",
+            "radiusUsername",
+            "radiusPassword",
+            "radiusCalledStationId",
+            "radiusCallingStationId",
+        ],
+        "redis": ["dbcon"],
     }
-    match args.type.lower():
-        case "http":
-            monitor_data["url"] = args.url
-            monitor_data["expiryNotification"] = args.expirynotification
-            monitor_data["ignoreTls"] = args.ignoretls
-            monitor_data["accepted_statuscodes"] = args.statuscodes
-            monitor_data["proxyId"] = args.proxy
-            monitor_data["method"] = args.method
-            monitor_data["httpBodyEncoding"] = args.bodyencoding
-            monitor_data["body"] = args.body
-            monitor_data["headers"] = args.headers
-            monitor_data["authMethod"] = args.authmethod
 
-            match args.authmethod:
-                case "http_basic":
-                    monitor_data["basic_auth_user"] = args.http_username
-                    monitor_data["basic_auth_pass"] = args.http_password
+    # Get the additional keys based on the monitor type
+    additional_monitor_keys = additional_keys.get(args.type.lower(), [])
 
-                case "ntlm":
-                    monitor_data["basic_auth_user"] = args.http_username
-                    monitor_data["basic_auth_pass"] = args.http_password
-                    monitor_data["authDomain"] = args.domain
-                    monitor_data["authWorkstation"] = args.workstation
+    # Update the monitor_data dictionary with additional keys
+    monitor_data.update(
+        {key: getattr(args, key, None) for key in additional_monitor_keys}
+    )
 
-                case "mtls":
-                    monitor_data["tlsCert"] = args.cert
-                    monitor_data["tlsKey"] = args.key
-                    monitor_data["tlsCa"] = args.ca
+    # Specific case, when monitor_data key is not the same as the argument name
+    for arg_name in additional_monitor_keys:
+        match arg_name:
+            case "dns_resolve_type":
+                print(arg_name)
+                monitor_data.update({arg_name: getattr(args, "record", None)})
+            case "dns_resolve_server":
+                monitor_data.update({arg_name: getattr(args, "resolver", None)})
+            case "docker_container":
+                monitor_data.update({arg_name: getattr(args, "container", None)})
+            case "docker_host":
+                monitor_data.update({arg_name: getattr(args, "dhost", None)})
+            case "databaseConnectionString":
+                monitor_data.update({arg_name: getattr(args, "dbcon", None)})
+            case "databaseQuery":
+                monitor_data.update({arg_name: getattr(args, "query", None)})
 
-        case "ping":
-            monitor_data["hostname"] = args.hostname
+    # Add monitor type
+    monitor_data["type"] = monitorType[args.type.lower()]
 
-        case "keyword" | "grpc_keyword":
-            monitor_data["url"] = args.url
-            monitor_data["keyword"] = args.keyword
-
-        case "dns":
-            monitor_data["hostname"] = args.hostname
-            monitor_data["dns_resolve_server"] = args.resolver
-            monitor_data["dns_resolve_type"] = args.record
-
-        case "docker":
-            monitor_data["docker_container"] = args.container
-            monitor_data["docker_host"] = args.dhost
-
-        case "gamedig":
-            monitor_data["hostname"] = args.hostname
-            monitor_data["port"] = args.port
-            monitor_data["game"] = args.game
-
-        case "mqtt":
-            monitor_data["hostname"] = args.hostname
-            monitor_data["port"] = args.port
-            monitor_data["mqttTopic"] = args.topic
-            monitor_data["mqttUsername"] = args.mqtt_username
-            monitor_data["mqttPassword"] = args.mqtt_password
-            monitor_data["mqttSuccessMessage"] = args.mqtt_success
-
-        case "sqlserver" | "postgres" | "mysql" | "mongodb":
-            monitor_data["databaseConnectionString"] = args.dbcon
-            monitor_data["databaseQuery"] = args.query
-
-        case "radius":
-            monitor_data["hostname"] = args.hostname
-            monitor_data["port"] = args.port
-            monitor_data["radiusSecret"] = args.radius_secret
-            monitor_data["radiusUsername"] = args.radius_username
-            monitor_data["radiusPassword"] = args.radius_password
-            monitor_data["radiusCalledStationId"] = args.radius_called
-            monitor_data["radiusCallingStationId"] = args.radius_calling
-
-        case "redis":
-            monitor_data["dbcon"] = args.dbcon
-
-    # Connexion a notre instance uptime kuma
+    # Connection to Uptime Kuma API
     api = KumaCompanion().get_api()
 
-    # Création d'un monitoring
-    # Suppression des clés avec valeur None
+    # Delete None values from the dictionary
     monitor_data = {k: v for k, v in monitor_data.items() if v is not None}
-    # Appeler la méthode add_monitor pour créer le monitoring
+
+    # Add monitor
     try:
         response = api.add_monitor(**monitor_data)
         print(response["msg"])
-        # api.disconnect()
         return response["msg"]
     except Exception as e:
-        # api.disconnect()
         print("Error creating monitor:", str(e))
 
 

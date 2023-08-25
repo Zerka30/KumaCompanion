@@ -16,7 +16,6 @@ def test_delete_monitor_id():
         args = argparse.Namespace(monitor=[monitor_id])
         result = delete_monitor(args)
         assert result[0] == "Deleted Successfully."
-
     finally:
         pass
 
