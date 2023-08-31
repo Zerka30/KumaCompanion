@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    assignees:
+      - Zerka30
+    commit-message:
+      prefix: ":arrow_up: "
+      include: scope
+
+    # Optionally, you can specify any additional package-ecosystem-specific settings.
+    # For Python, you may want to pin certain dependencies to a specific version.
+    # For example, if you want to pin the requests library to version 2.26.0:
+    # python:
+    #   - package: "requests"
+    #     version: ">=2.26.0,<3.0.0"
+
+
