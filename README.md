@@ -46,7 +46,7 @@ Note: This project is currently under development and may be incomplete.
     - [x] `resume`
 - [ ] Commands : `kuma maintenance`
     - [x] `add`
-    - [ ] `delete`
+    - [x] `delete`
     - [ ] `edit`
     - [ ] `ls`
     - [ ] `get`
