@@ -1,4 +1,4 @@
-from . import add
+from . import add, delete
 
 
 def add_subparser(subparsers):
@@ -12,6 +12,7 @@ def add_subparser(subparsers):
 
     # Add subparsers for each subcommand
     add.maintenance_parser(maintenance_subparsers)
+    delete.maintenance_parser(maintenance_subparsers)
 
     # Default action when no subcommand is provided
     maintenance_parser.set_defaults(func=lambda _: maintenance_parser.print_help())
