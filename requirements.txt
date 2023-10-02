@@ -1,5 +1,5 @@
 python-dotenv==1.0.0
-uptime-kuma-api==1.2.0
+uptime-kuma-api==1.2.1
 argparse==1.4.0
 flake8
 black
