@@ -26,6 +26,8 @@ def config(args):
         print_configuration()
     else:
         if args.url and args.username and args.password:
+            success = False
+
             try:
                 api = UptimeKumaApi(args.url)
                 result, error_message = is_correct_credentials(
@@ -36,32 +38,37 @@ def config(args):
                 # raise Timeout()
                 if result:
                     print("\n✓ Login successful")
+                    success = True
                 else:
-                    print("\nLogin failed:", error_message)
+                    print("\nX Login failed:", error_message)
                     return
+            except (UptimeKumaException, ConnectionError):
+                print("\nX Login failed: Unable to connect")
+                print("\nPlease check your network connection and try again !")
             except (Timeout, TimeoutError):
                 api.disconnect()
-                print("\nLogin failed: Connection timed out")
+                print("\nX Login failed: Connection timed out")
                 return
             except Exception as e:
                 api.disconnect()
                 print("\nLogin failed:", e)
                 return
 
-            # Set the environment variables
-            os.environ["UPTIME_KUMA_URL"] = args.url
-            os.environ["UPTIME_KUMA_USERNAME"] = args.username
-            os.environ["UPTIME_KUMA_PASSWORD"] = args.password
+            if success:
+                # Set the environment variables
+                os.environ["UPTIME_KUMA_URL"] = args.url
+                os.environ["UPTIME_KUMA_USERNAME"] = args.username
+                os.environ["UPTIME_KUMA_PASSWORD"] = args.password
 
-            # Update the .bashrc file
-            update_bashrc()
+                # Update the .bashrc file
+                update_bashrc()
 
-            print(
-                "\nConfiguration completed. Your credentials have been stored in environment variables."
-            )
-            print(
-                "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
-            )
+                print(
+                    "\nConfiguration completed. Your credentials have been stored in environment variables."
+                )
+                print(
+                    "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
+                )
         else:
             print(
                 "Welcome to KumaCompanion configuration!\n"
@@ -76,6 +83,8 @@ def config(args):
                 print("\n\nConfiguration aborted.")
                 return
 
+            success = False
+
             try:
                 api = UptimeKumaApi(url)
                 result, error_message = is_correct_credentials(api, username, password)
@@ -83,32 +92,37 @@ def config(args):
                 # Use the function directly in the if statement
                 if result:
                     print("\n✓ Login successful")
+                    success = True
                 else:
-                    print("\nLogin failed:", error_message)
+                    print("\nX Login failed:", error_message)
                     return
+            except (UptimeKumaException, ConnectionError):
+                print("\nX Login failed: Unable to connect")
+                print("\nPlease check your network connection and try again !")
             except (Timeout, TimeoutError):
                 api.disconnect()
-                print("\nLogin failed: Connection timed out")
+                print("\nX Login failed: Connection timed out")
                 return
             except Exception as e:
                 api.disconnect()
                 print("\nLogin failed:", e)
                 return
 
-            # Set the environment variables
-            os.environ["UPTIME_KUMA_URL"] = url
-            os.environ["UPTIME_KUMA_USERNAME"] = username
-            os.environ["UPTIME_KUMA_PASSWORD"] = password
+            if success:
+                # Set the environment variables
+                os.environ["UPTIME_KUMA_URL"] = url
+                os.environ["UPTIME_KUMA_USERNAME"] = username
+                os.environ["UPTIME_KUMA_PASSWORD"] = password
 
-            # Update the .bashrc file
-            update_bashrc()
+                # Update the .bashrc file
+                update_bashrc()
 
-            print(
-                "\nConfiguration completed. Your credentials have been stored in environment variables."
-            )
-            print(
-                "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
-            )
+                print(
+                    "\nConfiguration completed. Your credentials have been stored in environment variables."
+                )
+                print(
+                    "Please reload your shell to use the new configuration or run 'source ~/.bashrc'"
+                )
 
 
 def update_bashrc():
