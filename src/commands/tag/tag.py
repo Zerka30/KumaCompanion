@@ -1,4 +1,4 @@
-from . import add
+from . import add, delete
 
 
 def add_subparser(subparsers):
@@ -10,6 +10,7 @@ def add_subparser(subparsers):
 
     # Add subparsers for each subcommand
     add.tag_parser(tag_subparsers)
+    delete.tag_parser(tag_subparsers)
 
     # Default action when no subcommand is provided
     tag_parser.set_defaults(func=lambda _: tag_parser.print_help())
