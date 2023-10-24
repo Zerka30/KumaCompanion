@@ -3,6 +3,7 @@ import config as cfg
 from commands.monitor import monitor
 from commands.maintenance import maintenance
 from commands.config import config
+from commands.tag import tag
 from api.KumaCompanion import KumaCompanion
 
 
@@ -22,6 +23,7 @@ def main():
     monitor.add_subparser(subparsers)
     maintenance.add_subparser(subparsers)
     config.add_subparser(subparsers)
+    tag.add_subparser(subparsers)
 
     args = parser.parse_args()
 
