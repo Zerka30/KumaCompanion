@@ -1,7 +1,8 @@
 from api.KumaCompanion import KumaCompanion
 import os
 from tabulate import tabulate
-
+from uptime_kuma_api import Timeout, UptimeKumaApi, UptimeKumaException
+import config
 
 def monitor_parser(subparsers):
     """
@@ -54,7 +55,11 @@ def ls_monitors(args):
         args: The arguments passed to the ls command.
     """
     # Connexion a notre instance uptime kuma
-    api = KumaCompanion().get_api()
+    try:
+        api = KumaCompanion().get_api()
+    except ConnectionError as e:
+        print("Error connecting to Uptime Kuma:", str(e))
+        os._exit(1)
 
     monitors = []
 
