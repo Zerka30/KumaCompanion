@@ -1,15 +1,14 @@
 {
-    "python.formatting.provider": "black",
     "editor.formatOnSave": true,
-    "python.linting.flake8Args": [
-        "--ignore=E501"
-    ],
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true,
-    "editor.rulers": [
-        100
-    ],
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.python"
-    }
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+        "**/.mypy_cache": true,
+        "**/.ruff_cache": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "python.analysis.indexing": true,
+    "python.analysis.autoImportCompletions": true
 }

@@ -9,14 +9,17 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt && echo \"alias kuma='python /workspaces/KumaCompanion/src/main.py'\nalias kuma-cleaner='python /workspaces/KumaCompanion/utils/cleaner.py'\" >> /home/vscode/.bashrc",
+	"postCreateCommand": "pip3 install --user -r .devcontainer/requirements.txt && pip3 install --user -r requirements.txt && echo \"alias kuma='python /workspaces/KumaCompanion/src/main.py'\nalias kuma-cleaner='python /workspaces/KumaCompanion/utils/cleaner.py'\" >> /home/vscode/.bashrc",
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
 				"seatonjiang.gitmoji-vscode",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"charliermarsh.ruff",
+				"ms-python.vscode-pylance",
+				"GitHub.copilot-chat",
+				"ms-azuretools.vscode-docker"
 			]
 		}
 	},
