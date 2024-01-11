@@ -15,7 +15,9 @@ def pause_monitor(args):
             args.monitor = []
         for monitor in args.monitor:
             for m in monitors:
-                if m["name"] == monitor or m["id"] == int(monitor):
+                if m["name"] == monitor or (
+                    str(monitor).isdigit() and int(m["id"]) == int(monitor)
+                ):
                     monitors_ids.append(m["id"])
                     break
 
