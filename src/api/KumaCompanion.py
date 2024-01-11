@@ -1,7 +1,6 @@
 from uptime_kuma_api import UptimeKumaApi
 import config
 
-
 class KumaCompanion:
     _instance = None
 
@@ -23,5 +22,11 @@ class KumaCompanion:
 
     def get_api(self):
         if self.api is None:
-            self.connect()  # Connectez-vous si ce n'est pas déjà fait
+            if config.UPTIME_KUMA_URL is None:
+                raise(ConnectionError("Uptime Kuma URL is not set"))
+            if config.UPTIME_KUMA_USERNAME is None:
+                raise(ConnectionError("Uptime Kuma username is not set"))
+            if config.UPTIME_KUMA_PASSWORD is None:
+                raise(ConnectionError("Uptime Kuma password is not set"))
+            self.connect()
         return self.api
