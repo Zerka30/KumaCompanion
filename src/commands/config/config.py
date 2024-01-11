@@ -1,20 +1,21 @@
 import os
 import subprocess
-from uptime_kuma_api import UptimeKumaApi, UptimeKumaException, Timeout
+
 from socketio.exceptions import TimeoutError
+from uptime_kuma_api import Timeout, UptimeKumaApi, UptimeKumaException
 
 
 def config(args):
     print(
         """
-                 _  __                      _____                                  _             
-                | |/ /                     / ____|                                (_)            
-                | ' /_   _ _ __ ___   __ _| |     ___  _ __ ___  _ __   __ _ _ __  _  ___  _ __  
+                 _  __                      _____                                  _
+                | |/ /                     / ____|                                (_)
+                | ' /_   _ _ __ ___   __ _| |     ___  _ __ ___  _ __   __ _ _ __  _  ___  _ __
                 |  <| | | | '_ ` _ \ / _` | |    / _ \| '_ ` _ \| '_ \ / _` | '_ \| |/ _ \| '_ \ 
                 | . \ |_| | | | | | | (_| | |___| (_) | | | | | | |_) | (_| | | | | | (_) | | | |
                 |_|\_\__,_|_| |_| |_|\__,_|\_____\___/|_| |_| |_| .__/ \__,_|_| |_|_|\___/|_| |_|
-                                                                | |                              
-                                                                |_|                                               
+                                                                | |
+                                                                |_|
 
           """
     )
@@ -25,7 +26,11 @@ def config(args):
     if args.show:
         print_configuration()
     else:
-        if args.url and args.username and args.password:
+        if (args.url and args.username and args.password) or (
+            config.UPTIME_KUMA_URL
+            and config.UPTIME_KUMA_USERNAME
+            and config.UPTIME_KUMA_PASSWORD
+        ):
             success = False
 
             try:
