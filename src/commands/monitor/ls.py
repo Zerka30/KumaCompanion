@@ -1,8 +1,7 @@
 from api.KumaCompanion import KumaCompanion
 import os
 from tabulate import tabulate
-from uptime_kuma_api import Timeout, UptimeKumaApi, UptimeKumaException
-import config
+
 
 def monitor_parser(subparsers):
     """
@@ -104,6 +103,7 @@ def ls_monitors(args):
 
                     value = {
                         "http": url,
+                        "group": hostname,
                         "port": hostname_port,
                         "ping": hostname,
                         "keyword": url,
