@@ -56,11 +56,11 @@ Note: This project is currently under development and may be incomplete.
     - [ ] `edit`
     - [ ] `ls`
     - [ ] `get`
-- [ ] Commands : `kuma label`
-    - [ ] `add`
-    - [ ] `delete`
+- [ ] Commands : `kuma tags`
+    - [x] `add`
+    - [x] `delete`
     - [ ] `edit`
-    - [ ] `ls`
+    - [x] `ls`
     - [ ] `get`
 - [ ] Docs: Write all documentations
 - [ ] Build: Create system package
