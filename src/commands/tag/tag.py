@@ -4,6 +4,7 @@ from . import add, delete, ls
 def add_subparser(subparsers):
     tag_parser = subparsers.add_parser(
         "tag",  # name of the command
+        aliases=["tags", "label", "labels"],
         help="Manage instance tags",
     )
     tag_subparsers = tag_parser.add_subparsers(title="Tag commands", dest="tag_command")
