@@ -15,7 +15,7 @@ def delete_tag(args):
             args.tag = []
         for tag in args.tag:
             for t in tags:
-                if t["name"] == tag or t["id"] == int(t["id"]):
+                if t["name"] == tag or t["id"] == int(tag):
                     tags_id.append(t["id"])
                     break
 
