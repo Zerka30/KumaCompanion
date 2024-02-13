@@ -1,4 +1,4 @@
-from . import add, ls, delete, pause, resume, edit
+from . import add, ls, delete, pause, resume, edit, get
 
 
 def add_subparser(subparsers):
@@ -18,6 +18,7 @@ def add_subparser(subparsers):
     resume.monitor_parser(monitor_subparsers)
     pause.monitor_parser(monitor_subparsers)
     edit.monitor_parser(monitor_subparsers)
+    get.monitor_parser(monitor_subparsers)
 
     # Default action when no subcommand is provided
     monitor_parser.set_defaults(func=lambda _: monitor_parser.print_help())
