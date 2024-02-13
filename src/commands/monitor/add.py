@@ -95,7 +95,6 @@ def add_monitor(args):
     for arg_name in additional_monitor_keys:
         match arg_name:
             case "dns_resolve_type":
-                print(arg_name)
                 monitor_data.update({arg_name: getattr(args, "record", None)})
             case "dns_resolve_server":
                 monitor_data.update({arg_name: getattr(args, "resolver", None)})
@@ -367,6 +366,7 @@ def validate_monitor_args(args):
             "radius_calling",
         ],
         "redis": ["dbcon"],
+        "group": [],
     }
 
     missing_params = []
