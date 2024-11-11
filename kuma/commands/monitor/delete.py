@@ -1,4 +1,4 @@
-from api.KumaCompanion import KumaCompanion
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def delete_monitor(args):
@@ -15,7 +15,7 @@ def delete_monitor(args):
             args.monitor = []
         for monitor in args.monitor:
             for m in monitors:
-                if m["name"] == monitor or m["id"] == monitor:
+                if m["name"] == monitor or m["id"] == int(monitor):
                     monitor_id.append(m["id"])
                     break
 

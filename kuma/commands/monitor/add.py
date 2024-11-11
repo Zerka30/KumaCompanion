@@ -1,6 +1,7 @@
 import argparse
 from uptime_kuma_api import MonitorType
-from api.KumaCompanion import KumaCompanion
+
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def add_monitor(args):

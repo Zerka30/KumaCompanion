@@ -1,7 +1,8 @@
 import argparse
-import config
 from datetime import datetime
 from uptime_kuma_api import UptimeKumaApi, MaintenanceStrategy
+
+from kuma import config
 
 
 def add_maintenance(args):

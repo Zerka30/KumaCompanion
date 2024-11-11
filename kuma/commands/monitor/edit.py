@@ -1,5 +1,6 @@
-from api.KumaCompanion import KumaCompanion
 from uptime_kuma_api import MonitorType
+
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def edit_monitor(args):
@@ -40,6 +41,7 @@ def edit_monitor(args):
     if args.type is not None:
         monitor_data["type"] = monitorType[args.type.lower()]
 
+    print(args)
     match args.type.lower():
         case "http":
             monitor_data["url"] = args.url

@@ -1,12 +1,12 @@
 import argparse
-from api.KumaCompanion import KumaCompanion
+
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def add_tag(args):
     # Connection to Uptime Kuma API
     api = KumaCompanion().get_api()
     # Creating a new tag
-    # Add tag
     try:
         api.add_tag(name=args.name, color=args.color)
         print("Added Successfully.")

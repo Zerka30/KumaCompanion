@@ -1,4 +1,4 @@
-from api.KumaCompanion import KumaCompanion
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def pause_monitor(args):

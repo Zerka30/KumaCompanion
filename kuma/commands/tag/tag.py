@@ -13,7 +13,6 @@ def add_subparser(subparsers):
     add.tag_parser(tag_subparsers)
     delete.tag_parser(tag_subparsers)
     ls.tag_parser(tag_subparsers)
-    
 
     # Default action when no subcommand is provided
     tag_parser.set_defaults(func=lambda _: tag_parser.print_help())

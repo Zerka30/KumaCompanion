@@ -1,6 +1,7 @@
-from api.KumaCompanion import KumaCompanion
 import os
 from tabulate import tabulate
+
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def monitor_parser(subparsers):

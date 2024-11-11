@@ -1,7 +1,8 @@
 import os
 import json
-from api.KumaCompanion import KumaCompanion
 from uptime_kuma_api import MonitorType
+
+from kuma.api.KumaCompanion import KumaCompanion
 
 
 def get_monitor(args):
@@ -114,7 +115,7 @@ def get_monitor(args):
         print(json.dumps(filtered_monitor_data, indent=4))
         return filtered_monitor_data
     except Exception as e:
-        print("Error deleting monitors:", str(e))
+        print("Error getting monitors:", str(e))
 
 
 def monitor_parser(subparsers):

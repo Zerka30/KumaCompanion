@@ -4,6 +4,8 @@ import subprocess
 from socketio.exceptions import TimeoutError
 from uptime_kuma_api import Timeout, UptimeKumaApi, UptimeKumaException
 
+import kuma.config as cfg
+
 
 def config(args):
     print(
@@ -19,7 +21,7 @@ def config(args):
 
           """
     )
-    print("Version: 1.0.0")
+    print("Version: 0.1.0")
     print("Github: https://github.com/Zerka/KumaCompanion")
     print("")
 
@@ -27,9 +29,9 @@ def config(args):
         print_configuration()
     else:
         if (args.url and args.username and args.password) or (
-            config.UPTIME_KUMA_URL
-            and config.UPTIME_KUMA_USERNAME
-            and config.UPTIME_KUMA_PASSWORD
+            cfg.UPTIME_KUMA_URL
+            and cfg.UPTIME_KUMA_USERNAME
+            and cfg.UPTIME_KUMA_PASSWORD
         ):
             success = False
 
