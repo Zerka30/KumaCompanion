@@ -31,7 +31,7 @@
 
 KumaCompanion is a powerful and flexible Command-Line Interface (CLI) tool for managing and interacting with [Uptime Kuma](https://uptime.kuma.pet/), a feature-rich monitoring platform. With KumaCompanion, you can easily configure, monitor, and manage your applications, services, and infrastructure seamlessly from the command line.
 
-Note: This project is currently under development and may be incomplete.
+Note: This project is currently under development and may be incomplete. (The developpement is resumed ! :D)
 
 <!-- ROADMAP -->
 ## Roadmap
