@@ -33,6 +33,24 @@ KumaCompanion is a powerful and flexible Command-Line Interface (CLI) tool for m
 
 Note: This project is currently under development and may be incomplete.
 
+## Installation
+
+Clone the repository:
+```bash
+git clone https://github.com/Zerka30/KumaCompanion.git
+cd KumaCompanion
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Run the CLI:
+```bash
+python src/main.py
+```
+
 <!-- ROADMAP -->
 ## Roadmap
 
